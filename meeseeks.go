@@ -32,9 +32,6 @@ func NewMeeseeks() *serverMux {
 	}
 }
 
-//methods on it
-
-// method to register handlers on patterns
 // serverMux struct methods
 func (s *serverMux) GET(pattern string, handler http.HandlerFunc) {
 	allowedMethods := []string{http.MethodGet, http.MethodHead}
@@ -69,18 +66,11 @@ func (s *serverMux) wrap(handler http.HandlerFunc) http.HandlerFunc {
 	return handler
 }
 
-//method serverHttp
-
-
-
-//extract path parameter value
 // middleware function must have http.HandlerFunc function signature thus func(http.ResponseWriter, *http.Request)
 func (s *serverMux) Use(m ...func(http.HandlerFunc) http.HandlerFunc) {
 	s.middlewares = append(s.middlewares, m...)
 
 }
-
-//method serverHttp is implemented by serverMux struct making it a http.Handler
 
 // match function
 func (r route) match(c context.Context, requestURL string) (context.Context, bool) {
