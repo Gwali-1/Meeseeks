@@ -1,9 +1,9 @@
 package meeseeks
 
 import (
+	"context"
 	"net/http"
 	"strings"
-	"context"
 )
 
 // struct http.Handler
@@ -66,9 +66,40 @@ func (s *serverMux) wrap(handler http.HandlerFunc) http.HandlerFunc {
 	return handler
 }
 
+
+
+
 // middleware function must have http.HandlerFunc function signature thus func(http.ResponseWriter, *http.Request)
 func (s *serverMux) Use(m ...func(http.HandlerFunc) http.HandlerFunc) {
 	s.middlewares = append(s.middlewares, m...)
+
+}
+
+//serverMux implements serveHTTP method hence is a http.Handler
+
+func (s *serverMux) serveHTTP(w http.ResponseWriter, r *http.Request) {
+	methodsAllowed := []string{http.MethodOptions}
+	for _, route := range *s.registeredRoutes {
+		ctx, match := route.match(r.Context(), r.URL.Path)
+		if match {
+			if route.method == r.Method {
+				route.handler.ServeHTTP(w, r.WithContext(ctx))
+				return
+			}
+
+			if !contains(methodsAllowed, route.method) {
+				methodsAllowed = append(methodsAllowed, route.method)
+			}
+		}
+	}
+
+	if len(methodsAllowed) > 0 {
+		w.Header().Set("Allow", strings.Join(methodsAllowed, ", "))
+		s.MethodNotAllowed.ServeHTTP(w, r)
+		return
+	}
+
+
 
 }
 
@@ -105,6 +136,15 @@ func loadParam(c context.Context, paramName string) string {
 		return ""
 	}
 	return value
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }
 
 //custom
