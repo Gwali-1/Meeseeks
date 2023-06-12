@@ -1,4 +1,4 @@
-package meeseeks
+package Meeseeks
 
 import (
 	"context"
@@ -66,9 +66,6 @@ func (s *serverMux) wrap(handler http.HandlerFunc) http.HandlerFunc {
 	return handler
 }
 
-
-
-
 // middleware function must have http.HandlerFunc function signature thus func(http.ResponseWriter, *http.Request)
 func (s *serverMux) Use(m ...func(http.HandlerFunc) http.HandlerFunc) {
 	s.middlewares = append(s.middlewares, m...)
@@ -95,11 +92,12 @@ func (s *serverMux) serveHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if len(methodsAllowed) > 0 {
 		w.Header().Set("Allow", strings.Join(methodsAllowed, ", "))
-		s.MethodNotAllowed.ServeHTTP(w, r)
+		f := http.HandlerFunc(s.MethodNotAllowed.ServeHTTP) //convert the http.Handler to http.HandleFunc so we can wrap middlewares
+		s.wrap(f).ServeHTTP(w, r)
 		return
 	}
-
-
+	f := http.HandlerFunc(s.NotFound.ServeHTTP) //convert the http.Handler to http.HandleFunc so we can wrap middlewares
+	s.wrap(f).ServeHTTP(w, r)
 
 }
 
