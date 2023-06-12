@@ -6,8 +6,6 @@ import (
 	"context"
 )
 
-
-
 // struct http.Handler
 type serverMux struct {
 	NotFound         http.Handler
@@ -73,10 +71,7 @@ func (s *serverMux) wrap(handler http.HandlerFunc) http.HandlerFunc {
 
 //method serverHttp
 
-//match function
-func (r route) match(url string, c context.ContextC){
 
-}
 
 //extract path parameter value
 // middleware function must have http.HandlerFunc function signature thus func(http.ResponseWriter, *http.Request)
