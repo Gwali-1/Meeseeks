@@ -3,6 +3,7 @@ package meeseeks
 import (
 	"net/http"
 	"strings"
+	"context"
 )
 
 //struct http.Handler
@@ -21,10 +22,19 @@ type route struct {
 	handler http.Handler
 }
 
+func NewMeeseeks() *serverMux {
+	return &serverMux{
+		NotFound: http.NotFoundHandler(),
+		MethodNotAllowed: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		}),
+		registeredRoutes: &[]route{},
+	}
+}
+
 //methods on it
 
 // method to register handlers on patterns
-
 func (s *serverMux) GET(pattern string, handler http.HandlerFunc) {
 	allowedMethods := []string{http.MethodGet, http.MethodHead}
 	for _, method := range allowedMethods {
@@ -46,29 +56,24 @@ func (s *serverMux) POST(pattern string, handler http.HandlerFunc) {
 			path:    strings.Split(pattern, "/"),
 			handler: http.HandlerFunc(handler),
 		}
-
 		*s.registeredRoutes = append(*s.registeredRoutes, newRoute)
 	}
 }
 
-
-
-
-func (s *serverMux) wrap(handler http.HandlerFunc)http.HandlerFunc{
-	for _,m := range s.middlewares{
+// method to wrap middlewares around handlers
+func (s *serverMux) wrap(handler http.HandlerFunc) http.HandlerFunc {
+	for _, m := range s.middlewares {
 		handler = m(handler)
 	}
 	return handler
 }
 
-
-
-
-//method to wrap middlewares around handlers
-
 //method serverHttp
 
 //match function
+func (r route) match(url string, c context.ContextC){
+
+}
 
 //extract path parameter value
 
