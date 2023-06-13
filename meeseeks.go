@@ -74,7 +74,7 @@ func (s *serverMux) Use(m ...func(http.HandlerFunc) http.HandlerFunc) {
 
 //serverMux implements serveHTTP method hence is a http.Handler
 
-func (s *serverMux) serveHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *serverMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	methodsAllowed := []string{http.MethodOptions}
 	for _, route := range *s.registeredRoutes {
 		ctx, match := route.match(r.Context(), r.URL.Path)
