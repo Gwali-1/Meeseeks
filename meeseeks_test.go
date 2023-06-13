@@ -1,6 +1,8 @@
 package meeseeks
 
 import (
+	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -35,6 +37,31 @@ func TestPatternMatch(t *testing.T) {
 
 	if string(body) != "matched" {
 		t.Errorf("response body contains %v but expected %v", body, "matched")
+	}
+
+}
+
+var ctx context.Context
+
+func TestPathParam(t *testing.T) {
+	rt := NewMeeseeks()
+
+	hf := func(w http.ResponseWriter, r *http.Request) {
+		ctx = r.Context()
+	}
+	rt.GET("/one/:mine", hf)
+	re, err := http.NewRequest(http.MethodGet, "/one/yours", nil)
+	if err != nil {
+		t.Errorf("Error from NewRequest creation: %s ", err)
+	}
+
+	rr := httptest.NewRecorder()
+	rt.ServeHTTP(rr, re)
+
+	paramValue := LoadParam(ctx, "mine")
+	fmt.Println(paramValue)
+	if paramValue != "yours" {
+		t.Errorf("expected path parameter value %v but got %v", "mine", paramValue)
 	}
 
 }
