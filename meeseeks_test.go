@@ -205,22 +205,72 @@ func TestPathParam(t *testing.T) {
 }
 
 func TestTrailingBackslash(t *testing.T) {
-	rt := NewMeeseeks()
-	hf := func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("matched"))
-	}
-	rt.GET("/one", hf)
-	re, err := http.NewRequest(http.MethodGet, "/one/", nil)
-	if err != nil {
-		t.Errorf("Error from NewRequest creation: %s ", err)
+
+	var matchingTest = []struct {
+		RouteMethod string
+		RoutePath   string
+
+		RequestMethod string
+		RequestPath   string
+
+		ExpectedStatus int
+	}{
+
+		{
+			"GET",
+			"/one/name",
+
+			"GET",
+			"/one/name/",
+
+			404,
+		},
+		{
+			"GET",
+			"/his/:roleName/is/coming",
+
+			"GET",
+			"/his/highness/is/coming/",
+
+			404,
+		},
+
+		{
+			"GET",
+			"/checking/path",
+
+			"GET",
+			"/checking/path/",
+
+			404,
+		},
 	}
 
-	rr := httptest.NewRecorder()
-	rt.ServeHTTP(rr, re)
+	for _, test := range matchingTest {
+		rt := NewMeeseeks()
+
+		hf := func(w http.ResponseWriter, r *http.Request) {
+		}
+
+		if test.RouteMethod == "GET" {
+			rt.GET(test.RoutePath, hf)
+		} else {
+			rt.POST(test.RoutePath, hf)
+		}
+		re, err := http.NewRequest(test.RequestMethod, test.RequestPath, nil)
+		if err != nil {
+			t.Errorf("Error from NewRequest creation: %s ", err)
+		}
+		rr := httptest.NewRecorder()
+		rt.ServeHTTP(rr, re)
+
+
+
 
 	reqResponse := rr.Result()
-	if reqResponse.StatusCode != http.StatusNotFound {
-		t.Errorf("Status code %v but expected %v\n", reqResponse.StatusCode, http.StatusOK)
+	if reqResponse.StatusCode != test.ExpectedStatus {
+		t.Errorf("Status code %v but expected %v\n", reqResponse.StatusCode, test.ExpectedStatus)
 	}
 
+}
 }
