@@ -1,4 +1,4 @@
-package Meeseeks
+package meeseeks
 
 import (
 	"context"
