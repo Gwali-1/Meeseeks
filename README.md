@@ -87,8 +87,8 @@ router.GET("/bar",bar)  // This route will use both middleware1 and middleware2.
 ### Contributing
 
 Feel free to send in any contibutions (bug fixes , feature sugestions , etc)
------------------------------------
-was motivated to write meeseeks after seeing and reading source code for alexedwards/flow
+
+Was motivated to write meeseeks after reading source code for alexedwards/flow
 
 ### Todo
 - in memory session store
