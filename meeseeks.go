@@ -75,7 +75,7 @@ func (s *serverMux) Use(m ...func(http.HandlerFunc) http.HandlerFunc) {
 //serverMux implements serveHTTP method hence is a http.Handler
 
 func (s *serverMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	methodsAllowed := []string{http.MethodOptions}
+	methodsAllowed := []string{}
 	for _, route := range *s.registeredRoutes {
 		ctx, match := route.match(r.Context(), r.URL.Path)
 		if match {
@@ -91,7 +91,7 @@ func (s *serverMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(methodsAllowed) > 0 {
-		w.Header().Set("Allow", strings.Join(methodsAllowed, ", "))
+		w.Header().Set("Allow", strings.Join(append(methodsAllowed, http.MethodOptions), ", "))
 		f := http.HandlerFunc(s.MethodNotAllowed.ServeHTTP) //convert the http.Handler to http.HandleFunc so we can wrap middlewares
 		s.wrap(f).ServeHTTP(w, r)
 		return
@@ -127,7 +127,7 @@ func (r route) match(c context.Context, requestURL string) (context.Context, boo
 }
 
 // extract path parameter value
-func loadParam(c context.Context, paramName string) string {
+func LoadParam(c context.Context, paramName string) string {
 	value, ok := c.Value(string(paramName)).(string) //type assertion
 	//if value is not of type string
 	if !ok {
