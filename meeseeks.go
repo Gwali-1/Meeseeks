@@ -64,12 +64,13 @@ func (s *serverMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				route.handler.ServeHTTP(w, r.WithContext(ctx))
 				return
 			}
-
 			if !contains(methodsAllowed, route.method) {
 				methodsAllowed = append(methodsAllowed, route.method)
 			}
 		}
 	}
+
+
 
 	if len(methodsAllowed) > 0 {
 		w.Header().Set("Allow", strings.Join(append(methodsAllowed, http.MethodOptions), ", "))
@@ -81,6 +82,7 @@ func (s *serverMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.wrap(f).ServeHTTP(w, r)
 
 }
+
 
 // request url  match function
 func (r route) match(c context.Context, requestURL string) (context.Context, bool) {
