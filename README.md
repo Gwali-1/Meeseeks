@@ -4,11 +4,12 @@
 
 Meeseeks is lightweigth and provides powerful http routing
 
-#### meeseeks has a couple of features
+#### current meeseeks features
 
-- you can use **named parameters** in your routes.
+- you can have **named parameters** in your routes.
 - you can provide **Custom handlers** for `404 Not Found` and `405 Method Not Allowed` responses.
 - Sets an `Allow` header for all `405 Method Not Allowed` responses.
+- create and register middlewares to be used on all your routes
 - Provide `http.HandlerFunc` functions as your path handlers and middlewares(strightfoward and easy)
 - Zero dependencies.
 - lightweight and gives you maximum control
@@ -34,11 +35,11 @@ func main() {
     // Initialize a new meeseeks router.
     router := meeseeks.NewMeeseeks()
 
-     //register a handler function to handle get request on the /rocket/:name route
-    /you can use : to denote a named path parameter
-    //register handlers with route patterns using the http verb named methods on the meeseeks router (currently supports jsut GET and POST)
+    //register a handler function to handle get request on the /rocket/:name route
+    //you can use : to denote a named path parameter
+    //register handlers with route patterns using the http verb named methods on the meeseeks router (currently supports just GET and POST)
     router.GET("/rocket/:name", func(w http.ResponseWriter, r *http.Request) {
-    // Using  meeseeks.LoadParam()  you can retrieve the path pparameter specifed in you route with by passing
+    // Using  meeseeks.LoadParam()  you can retrieve the path parameter specifed in you route with by passing
     //the request context and the parameter name
     // request context.
     name := meeseeks.LoadParam(r.Context(), "name")
@@ -56,13 +57,13 @@ func main() {
  router := meeseeks.NewMeeseeks()
 
 // The Use() method can be used to register middleware. Middleware registered
-//on the router will be available for all routes.
+//on the router will be available on routes registered after the after the middle are regitration.
 mux.Use(exampleMiddleware1)
 mux.Use(exampleMiddleware2)
 mux.Use(exampleMiddleware3)
 mux.Use(exampleMiddleware4)
 
-//middlew ware excution is bottom to top meaning exampleMiddleware4 is executed first in the middleware chain then
+//middleware excution is bottom to top meaning exampleMiddleware4 is executed first in the middleware chain then
 //exampleMiddleware3 and so on. This is useful if you need your middleware to execute in a particular order
 
 ```
@@ -85,4 +86,12 @@ router.GET("/bar",bar)  // This route will use both middleware1 and middleware2.
 
 ### Contributing
 
-Feel free to send in any type of contibutions (bug fixes , feature sugestions , etc)
+Feel free to send in any contibutions (bug fixes , feature sugestions , etc)
+-----------------------------------
+was motivated to write meeseeks after seeing and reading source code for alexedwards/flow
+
+### Todo
+- in memory session store
+- provide in built middlewares for file serving
+
+
