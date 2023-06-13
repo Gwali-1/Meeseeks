@@ -264,13 +264,10 @@ func TestTrailingBackslash(t *testing.T) {
 		rr := httptest.NewRecorder()
 		rt.ServeHTTP(rr, re)
 
+		reqResponse := rr.Result()
+		if reqResponse.StatusCode != test.ExpectedStatus {
+			t.Errorf("Status code %v but expected %v\n", reqResponse.StatusCode, test.ExpectedStatus)
+		}
 
-
-
-	reqResponse := rr.Result()
-	if reqResponse.StatusCode != test.ExpectedStatus {
-		t.Errorf("Status code %v but expected %v\n", reqResponse.StatusCode, test.ExpectedStatus)
 	}
-
-}
 }
