@@ -2,7 +2,7 @@
 
 # Meeseeks
 
-Meeseeks is lightweigth and provides powerful http routing
+Meeseeks is lightweigth and provides powerful http routing functionality
 
 #### current meeseeks features
 
@@ -93,5 +93,5 @@ Was motivated to write meeseeks after reading source code for  [alexedwards/flow
 ### Todo
 - in memory session store
 - provide in built middlewares for file serving
-
+- middleware tests
 
