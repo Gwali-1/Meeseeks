@@ -46,7 +46,7 @@ func main() {
     fmt.Fprintf(w, "rocket name is  %s", name)
 })
 
-    err := http.ListenAndServe(":2323", mux)
+    err := http.ListenAndServe(":2323", router)
     log.Fatal(err)
 }
 ```
@@ -58,10 +58,10 @@ func main() {
 
 // The Use() method can be used to register middleware. Middleware registered
 //on the router will be available on routes registered after the after the middle are regitration.
-mux.Use(exampleMiddleware1)
-mux.Use(exampleMiddleware2)
-mux.Use(exampleMiddleware3)
-mux.Use(exampleMiddleware4)
+router.Use(exampleMiddleware1)
+router.Use(exampleMiddleware2)
+router.Use(exampleMiddleware3)
+router.Use(exampleMiddleware4)
 
 //middleware excution is bottom to top meaning exampleMiddleware4 is executed first in the middleware chain then
 //exampleMiddleware3 and so on. This is useful if you need your middleware to execute in a particular order
