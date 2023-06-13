@@ -2,7 +2,6 @@ package meeseeks
 
 import (
 	"context"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -59,9 +58,36 @@ func TestPathParam(t *testing.T) {
 	rt.ServeHTTP(rr, re)
 
 	paramValue := LoadParam(ctx, "mine")
-	fmt.Println(paramValue)
 	if paramValue != "yours" {
 		t.Errorf("expected path parameter value %v but got %v", "mine", paramValue)
 	}
 
 }
+
+func TestTrailingBackslash(t *testing.T) {
+	rt := NewMeeseeks()
+	hf := func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("matched"))
+	}
+	rt.GET("/one", hf)
+	re, err := http.NewRequest(http.MethodGet, "/one/", nil)
+	if err != nil {
+		t.Errorf("Error from NewRequest creation: %s ", err)
+	}
+
+	rr := httptest.NewRecorder()
+	rt.ServeHTTP(rr, re)
+
+	reqResponse := rr.Result()
+	if reqResponse.StatusCode != http.StatusNotFound {
+		t.Errorf("Status code %v but expected %v", reqResponse.StatusCode, http.StatusOK)
+	}
+
+
+
+}
+
+
+
+
+
