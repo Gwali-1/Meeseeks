@@ -6,6 +6,16 @@ import (
 	"strings"
 )
 
+
+//the serverMux type is a http.Handler that contains other handlers
+//it implementation of the ServeHTTP function on the http.Handler interface makes it so
+//the type has various metohds implemented for registering handlers with url paths and also wrapping handlers with middleware to be executed within the request response cylce
+//there is another struct of type router that contains url patterns , thier respective handlers etc
+//it contains methods to match incoming request url against a other registered patterns and find a match
+//the match function contain the logic for matching the requested url to its appropriate handler. the matching function is kept minimal here and is higly influenced by the matching
+//function in github.com/alexedwards/flow
+
+
 // struct http.Handler
 type serverMux struct {
 	NotFound         http.Handler
@@ -46,8 +56,7 @@ func (s *serverMux) Use(m ...func(http.HandlerFunc) http.HandlerFunc) {
 
 }
 
-//serverMux implements serveHTTP method hence is a http.Handler
-
+//serverMux implements serveHTTP method hence is of type http.Handler
 func (s *serverMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	methodsAllowed := []string{}
 	for _, route := range *s.registeredRoutes {
@@ -75,7 +84,7 @@ func (s *serverMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// match function
+//request url  match function
 func (r route) match(c context.Context, requestURL string) (context.Context, bool) {
 	urlPathSegements := strings.Split(requestURL, "/")
 	if len(r.path) != len(urlPathSegements) {
@@ -100,7 +109,7 @@ func (r route) match(c context.Context, requestURL string) (context.Context, boo
 	return c, true
 }
 
-// extract path parameter value
+// extract path parameter value by passing in request context
 func LoadParam(c context.Context, paramName string) string {
 	value, ok := c.Value(string(paramName)).(string) //type assertion
 	//if value is not of type string
@@ -109,6 +118,7 @@ func LoadParam(c context.Context, paramName string) string {
 	}
 	return value
 }
+
 
 func contains(s []string, e string) bool {
 	for _, a := range s {
