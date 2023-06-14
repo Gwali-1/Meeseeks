@@ -2,7 +2,7 @@
 
 # Meeseeks
 
-Meeseek is lightweigth and provides powerful http routing functionality
+Meeseek is lightweight and provides powerful http routing functionality
 
 #### current meeseeks features
 
@@ -10,7 +10,7 @@ Meeseek is lightweigth and provides powerful http routing functionality
 - you can provide **Custom handlers** for `404 Not Found` and `405 Method Not Allowed` responses.
 - Sets an `Allow` header for all `405 Method Not Allowed` responses.
 - create and register middlewares to be used on all your routes
-- Provide `http.HandlerFunc` functions as your path handlers and middlewares(strightfoward and easy)
+- Provide `http.HandlerFunc` functions as your path handlers and middlewares(straightfoward and easy)
 - Zero dependencies.
 - lightweight and gives you maximum control
 
@@ -68,12 +68,13 @@ router.Use(exampleMiddleware4)
 
 ```
 
+
 ### Things To Note
 
-- You can have conflicting routes like (e.g. `/posts/:id` and `posts/new`). The order in which they are declared is how they are matched
-- Trailing slashes are significant ; `/profile/:id` and `/profile/:id/` are not the same and won't match.
+- You can have conflicting routes such as (e.g. `/posts/:id` and `posts/new`). The order in which they are declared is how they are matched
+- Trailing slashes are significant; `/profile/:id` and `/profile/:id/` are not the same and won't match.
 - An `Allow` header is automatically set for all `405 Method Not Allowed` responses
-- Middleware must be declared _before_ a route in order to be used by that route. Any middleware declared after a route won't act on that route.
+- Middleware must be declared _before_ a route in order for it to be used by that route. Any middleware declared after a route won't act on that route.
 - For example:
 
 ```go
@@ -86,11 +87,12 @@ router.GET("/bar",bar)  // This route will use both middleware1 and middleware2.
 
 ### Contributing
 
-Feel free to send in any contibutions (bug fixes , feature sugestions , etc)
+Feel free to send in any contributions (bug fixes, feature suggestions, etc)
+
 
 Was motivated to write meeseeks after reading source code for  [alexedwards/flow](https://github.com/alexedwards/flow)
 
 ### Todo
 - in memory session store
-- provide in built middlewares for file serving
+- provide in-built middlewares for file serving
 - middleware usage tests

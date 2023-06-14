@@ -206,7 +206,7 @@ func TestPathParam(t *testing.T) {
 
 func TestTrailingBackslash(t *testing.T) {
 
-	var matchingTest = []struct {
+	var backslashTest = []struct {
 		RouteMethod string
 		RoutePath   string
 
@@ -246,7 +246,7 @@ func TestTrailingBackslash(t *testing.T) {
 		},
 	}
 
-	for _, test := range matchingTest {
+	for _, test := range backslashTest {
 		rt := NewMeeseeks()
 
 		hf := func(w http.ResponseWriter, r *http.Request) {
