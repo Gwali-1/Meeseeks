@@ -7,9 +7,9 @@ import (
 )
 
 //the serverMux type is a http.Handler that contains other handlers
-//it implementation of the ServeHTTP function on the http.Handler interface makes it so
+//it's implementation of the ServeHTTP function on the http.Handler interface makes it so
 //the type has various metohds implemented for registering handlers with url paths and also wrapping handlers with middleware to be executed within the request response cylce
-//there is another struct of type router that contains url patterns , thier respective handlers etc
+//there is another struct of type router that contains url patterns , their respective handlers etc
 //it contains methods to match incoming request url against a other registered patterns and find a match
 //the match function contain the logic for matching the requested url to its appropriate handler. the matching function is kept minimal here and is higly influenced by the matching
 //function in github.com/alexedwards/flow
